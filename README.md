@@ -112,3 +112,7 @@ cidr_blocks     = ["0.0.0.0/0"]
 security_group_id = aws_security_group.frontend.id
 }
 ```
+
+**Method-3-for_each
+
+You can easily add or remove ports in the var.frontend_ports variable, and Terraform will automatically create or delete the corresponding security group ingress rules. 
