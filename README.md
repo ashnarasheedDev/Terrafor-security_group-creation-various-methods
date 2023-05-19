@@ -18,6 +18,7 @@ resource "aws_security_group" "frontend" {
     from_port   = 22
     to_port     = 22
     protocol    = "tcp"
+    ipv6_cidr_blocks = ["::/0"]
     cidr_blocks = ["0.0.0.0/0"]
   }
 
@@ -25,6 +26,7 @@ resource "aws_security_group" "frontend" {
     from_port   = 80
     to_port     = 80
     protocol    = "tcp"
+    ipv6_cidr_blocks = ["::/0"]
     cidr_blocks = ["0.0.0.0/0"]
   }
 
@@ -32,6 +34,7 @@ resource "aws_security_group" "frontend" {
     from_port   = 443
     to_port     = 443
     protocol    = "tcp"
+    ipv6_cidr_blocks = ["::/0"]
     cidr_blocks = ["0.0.0.0/0"]
   }
 
@@ -39,6 +42,7 @@ resource "aws_security_group" "frontend" {
     from_port   = 8080
     to_port     = 8080
     protocol    = "tcp"
+    ipv6_cidr_blocks = ["::/0"]
     cidr_blocks = ["0.0.0.0/0"]
   }
 
@@ -46,6 +50,7 @@ resource "aws_security_group" "frontend" {
     from_port   = 53
     to_port     = 53
     protocol    = "udp"
+    ipv6_cidr_blocks = ["::/0"]
     cidr_blocks = ["0.0.0.0/0"]
   }
 
@@ -53,6 +58,7 @@ resource "aws_security_group" "frontend" {
     from_port       = 0
     to_port         = 0
     protocol        = "-1"
+    ipv6_cidr_blocks = ["::/0"]
     cidr_blocks     = ["0.0.0.0/0"]
   }
 }
@@ -64,7 +70,7 @@ resource "aws_security_group" "frontend" {
 ```
 variable "frontend-ports" {
 type = list
-default = [22,80,53,443,8080]
+default = [22,80,21,443,8080]
 }
 ```
 > Creating the SG
@@ -73,12 +79,13 @@ default = [22,80,53,443,8080]
 resource "aws_security_group" "frontend" {
 
 name        = "frontend"
-description = "Allow ssh, http,https and udp connections"
+description = "Allow ssh, http,https and ftp connections"
   
   egress {
     from_port       = 0
     to_port         = 0
     protocol        = "-1"
+    ipv6_cidr_blocks = ["::/0"]
     cidr_blocks     = ["0.0.0.0/0"]
   }
 }
@@ -88,10 +95,13 @@ description = "Allow ssh, http,https and udp connections"
 ```
 resource "aws_security_group_rule" "frontend" {
 count = length (var.frontend-ports)
+
 type = "ingress"
 from_port = var.frontend-ports[count.index]
 to_port = var.frontend-ports[count.index]
- cidr_blocks     = ["0.0.0.0/0"]
+protocol          = "tcp"
+ipv6_cidr_blocks = ["::/0"]
+cidr_blocks     = ["0.0.0.0/0"]
 security_group_id = aws_security_group.frontend.id
 }
 ```
