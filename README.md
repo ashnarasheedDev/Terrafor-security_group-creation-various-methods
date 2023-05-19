@@ -67,6 +67,9 @@ resource "aws_security_group" "frontend" {
 
 > Declaring the variable
 
+The default value is a list of integers [22, 80, 21, 443, 8080], representing the ports used for the frontend of an application or infrastructure.
+The value of the "frontend-ports" variable can be customized according to your requirements.
+
 ```
 variable "frontend-ports" {
 type = list
@@ -91,6 +94,10 @@ description = "Allow ssh, http,https and ftp connections"
 }
 ```
 > Creating ingress rule
+
+count = length(var.frontend-ports): This line sets the count of the resource based on the length of the "frontend-ports" variable. This allows creating multiple security group rules based on the number of ports specified in the variable.
+
+from_port = var.frontend-ports[count.index] and to_port = var.frontend-ports[count.index]: These lines dynamically assign the from_port and to_port of each security group rule using the values from the "frontend-ports" variable. The count.index variable is used to iterate through the list of ports.
 
 ```
 resource "aws_security_group_rule" "frontend" {
