@@ -113,7 +113,7 @@ security_group_id = aws_security_group.frontend.id
 }
 ```
 
-**Method-3-for_each
+**Method-3-for_each**
 
 You can easily add or remove ports in the var.frontend_ports variable, and Terraform will automatically create or delete the corresponding security group ingress rules. 
 
@@ -155,3 +155,51 @@ resource "aws_security_group_rule" "frontend-rules" {
   security_group_id = aws_security_group.frontend.id
 }
 ```
+
+**Method4-DynamicBlock**
+
+Dynamic block allows you to loop over a section of a resource and generate multiple instances of that section dynamically based on a given input. 
+
+The for_each argument of the dynamic block is set to toset(var.ports), which converts the ports variable into a set. Using a set ensures that duplicate ports are removed, as each security group rule must have a unique combination of ports.
+
+Inside the dynamic block, a nested content block is defined. This block represents the dynamic section that will be looped over.
+
+The attributes within the content block, such as from_port, to_port, protocol, cidr_blocks, and ipv6_cidr_blocks, are set based on the current value of ingress during each iteration.
+
+Each iteration of the dynamic block generates an ingress rule for a specific port.
+
+```
+variable "ports" {
+  type = list
+  default = ["80","443","8080,"22"]
+}
+
+
+resource "aws_security_group" "webserver-traffic" {
+    
+  name        = "dynamic-frontend"
+  description = "allows http & https traffic"
+    
+  dynamic "ingress" {
+    
+     for_each = toset(var.ports)
+     content {
+         
+        from_port        = ingress.value
+        to_port          = ingress.value
+        protocol         = "tcp"
+        cidr_blocks      = ["0.0.0.0/0"]
+        ipv6_cidr_blocks = ["::/0"]
+         
+    }
+  }
+    
+ 
+  egress {
+    from_port        = 0
+    to_port          = 0
+    protocol         = "-1"
+    cidr_blocks      = ["0.0.0.0/0"]
+    ipv6_cidr_blocks = ["::/0"]
+  }
+  }
