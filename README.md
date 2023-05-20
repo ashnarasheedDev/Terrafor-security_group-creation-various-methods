@@ -116,3 +116,42 @@ security_group_id = aws_security_group.frontend.id
 **Method-3-for_each
 
 You can easily add or remove ports in the var.frontend_ports variable, and Terraform will automatically create or delete the corresponding security group ingress rules. 
+
+Variable holds the list of ports to be opened for ingress traffic.
+The for_each argument is used to create a rule for each port in the frontend_ports list.
+Each rule allows ingress traffic on the specified port (both from_port and to_port) with the TCP protocol.
+```
+variable "frontend_ports" {
+    
+  type    = list
+  default = ["22","80","21","443"]
+    
+}
+
+resource "aws_security_group" "frontend" {
+        
+  name        = "frontend"
+  description = "frontend"
+
+  egress {
+    from_port        = 0
+    to_port          = 0
+    protocol         = "-1"
+    cidr_blocks      = ["0.0.0.0/0"]
+    ipv6_cidr_blocks = ["::/0"]
+  }
+}
+
+resource "aws_security_group_rule" "frontend-rules" {
+    
+  for_each          = toset(var.frontend_ports)
+        
+  type              = "ingress"
+  from_port         = each.key
+  to_port           = each.key
+  protocol          = "tcp"
+  cidr_blocks       = ["0.0.0.0/0"]
+  ipv6_cidr_blocks  = ["::/0"]
+  security_group_id = aws_security_group.frontend.id
+}
+```
