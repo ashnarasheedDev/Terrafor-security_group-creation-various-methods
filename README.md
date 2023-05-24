@@ -9,7 +9,7 @@ Let's explore each methodIn scenarios where you have a large number of security 
 
 It's important to consider the complexity of your infrastructure, the n to create a security group with the specified ingress ports (22, 80, 443, 8080, and 53) and allow all traffic in egress
 
-**Regular Method** 
+# Regular Method
 
 This security group allows inbound traffic on ports 22 (SSH), 80 (HTTP), 443 (HTTPS), 8080, and UDP traffic on port 53 (DNS). It allows outbound traffic to any destination on any port. But ts
 
@@ -68,7 +68,7 @@ resource "aws_security_group" "frontend" {
   }
 }
 ```
- **Method 2 - Using count | meta argument**
+ # Using count | meta argument
 
 > Declaring the variable
 
@@ -118,7 +118,7 @@ security_group_id = aws_security_group.frontend.id
 }
 ```
 
-**Method-3-for_each**
+# Using for_each
 
 You can easily add or remove ports in the var.frontend_ports variable, and Terraform will automatically create or delete the corresponding security group ingress rules. 
 
@@ -161,7 +161,7 @@ resource "aws_security_group_rule" "frontend-rules" {
 }
 ```
 
-**Method4-DynamicBlock**
+# DynamicBlock
 
 Dynamic block allows you to loop over a section of a resource and generate multiple instances of that section dynamically based on a given input. 
 
@@ -208,3 +208,8 @@ resource "aws_security_group" "webserver-traffic" {
     ipv6_cidr_blocks = ["::/0"]
   }
   }
+
+
+**Conclusion** 
+
+It's important to consider the complexity of your infrastructure, the number of security groups, and the desired flexibility when choosing the method to create security groups in Terraform
