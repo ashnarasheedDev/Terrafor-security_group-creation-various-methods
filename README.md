@@ -1,12 +1,17 @@
-# security_group-creation-using-count-foreach-dynamic_block
+# Various methods to create security groups in Terraform
 
-Creating security groups including number of ports in your Terraform code can make it longer and potentially more complex. To simplify your Terraform code, you can consider using meta arguments like count, foreach function and Dynamic blocks.
+There are multiple methods to create security groups (SGs) in Terraform using different constructs such as **regular method**, **count**, **for_each**, and **dynamic block**. 
+The "normal" method of creating security groups, where you define individual resource blocks for each security group, is straightforward and can be considered the simplest approach. It provides clear separation and explicit configuration for each security group. This method is suitable when you have a fixed number of security groups to create and when the number of security groups is relatively small.
 
-Let us go throough the different Terraform code to create a security group with the specified ingress ports (22, 80, 443, 8080, and 53) and allow all traffic in egress
+In scenarios where you have a large number of security groups or when you want to dynamically manage the security group configuration, using constructs like count, for_each, or dynamic blocks might be more suitable. These constructs enable you to generate security groups programmatically based on data structures or expressions, reducing code duplication and improving maintainability.
 
-**Method1** 
+Let's explore each methodIn scenarios where you have a large number of security groups or when you want to dynamically manage the security group configuration, using constructs like count, for_each, or dynamic blocks might be more suitable. These constructs enable you to generate security groups programmatically based on data structures or expressions, reducing code duplication and improving maintainability.
 
-This security group allows inbound traffic on ports 22 (SSH), 80 (HTTP), 443 (HTTPS), 8080, and UDP traffic on port 53 (DNS). It allows outbound traffic to any destination on any port.
+It's important to consider the complexity of your infrastructure, the n to create a security group with the specified ingress ports (22, 80, 443, 8080, and 53) and allow all traffic in egress
+
+**Regular Method** 
+
+This security group allows inbound traffic on ports 22 (SSH), 80 (HTTP), 443 (HTTPS), 8080, and UDP traffic on port 53 (DNS). It allows outbound traffic to any destination on any port. But ts
 
 You can see how long the code would be!
 ```
