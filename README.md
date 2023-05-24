@@ -208,8 +208,8 @@ resource "aws_security_group" "webserver-traffic" {
     ipv6_cidr_blocks = ["::/0"]
   }
   }
+```
 
-
-**Conclusion** 
+**Conclusion**
 
 It's important to consider the complexity of your infrastructure, the number of security groups, and the desired flexibility when choosing the method to create security groups in Terraform
